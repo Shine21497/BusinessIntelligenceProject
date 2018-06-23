@@ -13,7 +13,7 @@ import static org.neo4j.driver.v1.Values.parameters;
 @Component
 public class Neo4jDriver {
     public HashMap<String, List<HashMap<String,Object>>> getresult(String name1, String name2) {
-        Driver driver = GraphDatabase.driver("bolt://149.28.125.166:7687",
+        Driver driver = GraphDatabase.driver("bolt://45.77.214.60:7687",
                 AuthTokens.basic("neo4j","pzkpfw38t"));
         Map<Long,String> map = new HashMap<>();
         HashMap<String, List<HashMap<String,Object>>> resultgraph = new HashMap<>();
