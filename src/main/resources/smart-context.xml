@@ -19,6 +19,10 @@
 	<context:component-scan base-package="neo4j" />
 	<context:component-scan base-package="neo4jrepository" />
 
+	<!-- 配置缓存管理器 -->
+	<bean id="cacheManager" class="org.springframework.cache.guava.GuavaCacheManager">
+	</bean>
+
 	<!-- 配置数据源 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		  destroy-method="close"

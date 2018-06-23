@@ -5,6 +5,7 @@ import org.neo4j.driver.v1.*;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Path;
 import org.neo4j.driver.v1.types.Relationship;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -12,6 +13,7 @@ import java.util.*;
 import static org.neo4j.driver.v1.Values.parameters;
 @Component
 public class Neo4jDriver {
+    @Cacheable(cacheNames = "query",cacheManager = "cacheManager")
     public HashMap<String, List<HashMap<String,Object>>> getresult(String name1, String name2, int step1, int step2) {
         Driver driver = GraphDatabase.driver("bolt://45.77.214.60:7687",
                 AuthTokens.basic("neo4j","pzkpfw38t"));
@@ -43,12 +45,14 @@ public class Neo4jDriver {
                         allrelations.add(rela);
                     }
                 }
-                driver.close();
                 resultgraph.put("nodes",allnodes);
                 resultgraph.put("links",allrelations);
-                return resultgraph;
+
             }
         }
+        driver.close();
+        System.out.println(resultgraph);
+        return resultgraph;
 
     }
     public HashMap<String, List<HashMap<String,Object>>> getOneNoderesult(String name1, int step1, int step2) {
@@ -84,12 +88,13 @@ public class Neo4jDriver {
                     }
 
                 }
-                driver.close();
                 resultgraph.put("nodes",allnodes);
                 resultgraph.put("links",allrelations);
-                return resultgraph;
+
             }
         }
+        driver.close();
+        return resultgraph;
     }
 
     public static void main(String[] args) {
