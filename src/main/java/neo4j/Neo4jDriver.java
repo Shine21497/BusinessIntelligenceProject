@@ -7,6 +7,7 @@ import org.neo4j.driver.v1.types.Path;
 import org.neo4j.driver.v1.types.Relationship;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import util.CommonUtil;
 
 import java.util.*;
 
@@ -21,7 +22,7 @@ public class Neo4jDriver {
         HashMap<String, List<HashMap<String,Object>>> resultgraph = new HashMap<>();
         try(Session session = driver.session()){
             try (Transaction tx = session.beginTransaction()){
-                StatementResult result = tx.run("Match p=(n {Name:$name1 })-[r*" + step1 + ".." + step2 + "]-(m {Name:$name2}) return p as nodesrelation",
+                StatementResult result = tx.run("Match p=(n:" + CommonUtil.getlabel(name1) + "{Name:$name1 })-[r*" + step1 + ".." + step2 + "]-(m:" + CommonUtil.getlabel(name2) + "{Name:$name2}) return p as nodesrelation",
                         parameters("name1",name1,"name2",name2));
                 List<HashMap<String,Object>> allnodes = new ArrayList<>();
                 List<HashMap<String,Object>> allrelations = new ArrayList<>();
@@ -62,7 +63,7 @@ public class Neo4jDriver {
         HashMap<String, List<HashMap<String,Object>>> resultgraph = new HashMap<>();
         try(Session session = driver.session()){
             try (Transaction tx = session.beginTransaction()){
-                StatementResult result = tx.run("Match p=(n {Name:$name1 })-[r*" + step1 + ".." + step2 + "]-(m) return p as nodesrelation",
+                StatementResult result = tx.run("Match p=(n:" + CommonUtil.getlabel(name1) + "{Name:$name1 })-[r*" + step1 + ".." + step2 + "]-(m) return p as nodesrelation",
                         parameters("name1",name1));
                 List<HashMap<String,Object>> allnodes = new ArrayList<>();
                 List<HashMap<String,Object>> allrelations = new ArrayList<>();
