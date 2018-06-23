@@ -14,13 +14,13 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 
-public class NodeRepositoryTest extends AbstractTransactionalTestNGSpringContextTests{
+/*public class NodeRepositoryTest extends AbstractTransactionalTestNGSpringContextTests{
 
 
     @Test
     public void testquery() {
         Neo4jDriver neo4jDriver = new Neo4jDriver();
-        neo4jDriver.getresult("The_New_England_Journal_of_Medicine","Jeffrey_M._Drazen");
+        neo4jDriver.getresult("The_New_England_Journal_of_Medicine","Jeffrey_M._Drazen",1,2);
     }
 
-}
+}*/
