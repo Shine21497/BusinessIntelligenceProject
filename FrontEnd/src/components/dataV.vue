@@ -23,6 +23,7 @@
     </nav>
     <div id="3d-graph" style="display: none;"></div>
     <svg id="graph" width="1000" height="500"></svg>
+    <label style="color:white; display: block;"><input style="width:240px; margin-top: 20pt;" type="range" min="0" max="0.5" step="any" value="0.25"> Link Strength</label>
     <form class="form-inline mt" >
       <div style="width:100%; align:center; margin-top: 20px;">
         <input id="N1" class="form-control mr-lg-2" type="text" placeholder="Name 1" aria-label="Name 1"/>
@@ -90,7 +91,8 @@
 <script>
 import {showData} from '../assets/js/d3test.js'
 import {getData} from '../assets/js/api_test.js'
-import {show3d} from '../assets/js/ThreeD.js'
+import {showData2} from '../assets/js/N4jStyle.js'
+import {show3d, show3d2} from '../assets/js/ThreeD.js'
 
 export default {
   name: 'dataV',
@@ -111,10 +113,11 @@ export default {
         document.getElementById('graph').style.display = 'none'
         document.getElementById('3d-graph').style.display = 'block'
         console.log(this.nodes)
-        show3d(this.nodes, this.links)
+        show3d2(this.nodes, this.links)
       } else {
         document.getElementById('3d-graph').style.display = 'none'
         document.getElementById('graph').style.display = 'inline'
+        this.display(this.mode)
       }
     },
     dataType: function (x) {
@@ -131,12 +134,16 @@ export default {
       var displayArea = document.getElementById('graph')
       displayArea.style.background = 'white'
       displayArea.style.border = '2px solid gray'
-      this.display()
+      this.display(this.mode)
     },
-    display: function () {
-      console.log(this.nodes)
-      console.log(this.links)
-      showData(this.nodes, this.links)
+    display: function (x) {
+      if (x === 1) {
+        showData(this.nodes, this.links)
+      } else if (x === 2) {
+        showData2(this.nodes, this.links, false)
+      } else {
+        show3d2(this.nodes, this.links)
+      }
     }
   }
 }

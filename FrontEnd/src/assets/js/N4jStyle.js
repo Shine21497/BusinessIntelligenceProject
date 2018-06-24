@@ -1,5 +1,8 @@
-
-function showData (nodes, links) {
+function showData2 (nodes, links, update) {
+  var N = JSON.stringify(nodes)
+  var E = JSON.stringify(links)
+  localStorage.setItem('nodes', N)
+  localStorage.setItem('links', E)
   var width = 1000
   var height = 500
   var has_graph = false
@@ -41,8 +44,11 @@ function showData (nodes, links) {
     .append('circle')
     .attr('cx', function (d) { return d.x })
     .attr('cy', function (d) { return d.y })
-    .attr('r', '6')
-    .attr('fill', function (d) { return color(d.group) })
+    .attr('r', '10')
+    .attr('fill', 'lightskyblue'/*function (d) { return color(d.group) }*/)
+    .attr('stroke', 'aqua')
+    .style('stroke-width', 2)
+    .on('dblclick', click)
     .call(d3.drag()
       .on('start', dragstarted)
       .on('drag', dragged)
@@ -65,8 +71,8 @@ function showData (nodes, links) {
     .enter()
     .append('text')
     .style('fill', 'gray')
-    .attr('dx', 10)
-    .attr('dy', 6)
+    .attr('dx', 4)
+    .attr('dy', 0)
     .attr('font-size', 8)
     .text(function (d) {
       return d.type
@@ -88,7 +94,7 @@ function showData (nodes, links) {
     d.fy = null
   }
 
-  function inputted() {
+  function inputted () {
     simulation.force('link').strength(+this.value)
     simulation.alpha(1).restart();
   }
@@ -109,4 +115,65 @@ function showData (nodes, links) {
   }
 }
 
-export { showData }
+function click (d) {
+  var temp = updateData(d.name)
+  var newLinks = temp.links
+  var newNodes = temp.nodes
+  console.log(newNodes)
+  console.log(newLinks)
+  var oldNodes = JSON.parse(localStorage.getItem('nodes'))
+  var oldLinks = JSON.parse(localStorage.getItem('links'))
+  var nodes = removeRepeat(newNodes, oldNodes, 'n')
+  var links = removeRepeat(newLinks, oldLinks, 'l')
+  console.log(nodes)
+  console.log(links)
+  showData2(nodes, links, false)
+}
+
+function updateData (name) {
+  var temp
+  name = name.replace("\"","").replace("\"","")
+  $.ajax({
+    type: 'post',
+    async: false,
+    crossDomain: true,
+    url: 'http://115.159.34.252:8088/bi/api/getOneNodeData',
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+    },
+    data: {name_1: name, edge: 1},
+    success: function (res) {
+      temp = res
+      console.log(res)
+    },
+    error: function (res) {
+      console.log('A Something wrong!')
+    }
+  })
+  return temp
+}
+function removeRepeat (x, y, type) {
+  if (type === 'n') {
+    for (var i = 0; i < x.length; i++) {
+      for (var j = 0; j < y.length; j++) {
+        if (x[i].id === y[j].id) {
+          x.splice(i--, 1)
+          break
+        }
+      }
+    }
+  } else {
+    for (var i = 0; i < x.length; i++) {
+      for (var j = 0; j < y.length; j++) {
+        if (x[i].source === y[j].source && x[i].target === y[j].target && x[i].type === y[j].type) {
+          x.splice(i--, 1)
+          break
+        }
+      }
+    }
+  }
+  var array = x.concat(y)
+  return array
+}
+
+export { showData2 }
